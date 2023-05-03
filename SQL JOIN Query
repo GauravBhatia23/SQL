@@ -8,3 +8,22 @@ INNER JOIN country D ON C. country_id = D. country_id
 GROUP BY country
 ORDER BY COUNT(customer_id) DESC
 LIMIT 10
+
+/*Query to find the top 10 cities within the top 10 countries identified above*/
+
+SELECT D.Country, C.City, COUNT(Customer_id) AS Customer_Count
+FROM Customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN City C ON B.city_id = C.city_id
+INNER JOIN Country D ON C.country_id = D.country_id
+WHERE D.Country IN (SELECT D.Country
+FROM Customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN City C ON B.city_id = C.city_id
+INNER JOIN Country D ON C.country_id = D.country_id
+GROUP BY Country
+ORDER BY COUNT(*) DESC
+LIMIT 10)
+GROUP BY Country, city
+ORDER BY Customer_Count DESC
+LIMIT 10
